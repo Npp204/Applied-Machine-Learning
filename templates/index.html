@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán gian lận</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* Import Bootstrap */
+        @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
+
+        /* Tổng quan */
+        * {
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        form {
+            background: white;
+            padding: 40px;
+            width: 100%;
+            max-width: 850px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-top: 15px;
+            color: #333;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 10px rgba(0, 91, 187, 0.3);
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: rgb(255, 0, 0);
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 850px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #div-file-upload {
+            width: 800px;
+            margin-bottom: 10px;
+        }
+
+        #div-manual-input {
+            width: 800px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="mt-4">Dự đoán doanh nghiệp gian lận tài chính</h1>
+
+    <div id="div-file-upload" class="mt-4">
+        <!-- Form tải tệp CSV -->
+        <form id="file-upload-form" enctype="multipart/form-data" class="row g-4">
+            <label class="form-label">Chọn tệp CSV:</label>
+            <input type="file" class="form-control" name="file-upload" id="file-upload" required>
+            <button type="submit" class="btn btn-primary mt-3">Tải lên & Dự đoán</button>
+        </form>
+    </div>
+
+    <div id="div-manual-input">
+        <!-- Form nhập dữ liệu thủ công -->
+        <form id="manual-input-form" class="row g-4 mt-4">
+            <div class="col-md-6">
+                <label for="Sector_score" class="form-label">Giá trị rủi ro dựa vào lịch sử doanh nghiệp:</label>
+                <input type="text" class="form-control" name="Sector_score" id="Sector_score"
+                    placeholder="Nhập Sector Score" required>
+            </div>
+            <div class="col-md-6">
+                <label for="LOCATION_ID" class="form-label">Mã tỉnh/thành phố:</label>
+                <input type="text" class="form-control" name="LOCATION_ID" id="LOCATION_ID"
+                    placeholder="Nhập Location ID" required>
+            </div>
+            <div class="col-md-6">
+                <label for="Score_A" class="form-label">Điểm số của PARA_A:</label>
+                <input type="text" class="form-control" name="Score_A" id="Score_A" placeholder="Nhập Score A" required>
+            </div>
+            <div class="col-md-6">
+                <label for="Score_B" class="form-label">Điểm số của PARA_B:</label>
+                <input type="text" class="form-control" name="Score_B" id="Score_B" placeholder="Nhập Score B" required>
+            </div>
+            <div class="col-md-6">
+                <label for="numbers" class="form-label">Độ sai sót giữa dữ liệu kiểm tra và báo cáo:</label>
+                <input type="text" class="form-control" name="numbers" id="numbers" placeholder="Nhập Numbers" required>
+            </div>
+            <div class="col-md-6">
+                <label for="CONTROL_RISK" class="form-label">Độ sai sót tiềm ẩn trong kiểm toán:</label>
+                <input type="text" class="form-control" name="CONTROL_RISK" id="CONTROL_RISK"
+                    placeholder="Nhập Control Risk" required>
+            </div>
+            <div class="col-md-6">
+                <label for="MONEY_Marks" class="form-label">Điểm số của Money_Value:</label>
+                <input type="text" class="form-control" name="MONEY_Marks" id="MONEY_Marks"
+                    placeholder="Nhập Money Marks" required>
+            </div>
+            <div class="col-md-6">
+                <label for="District" class="form-label">Loại quận/huyện:</label>
+                <input type="text" class="form-control" name="District" id="District" placeholder="Nhập District"
+                    required>
+            </div>
+            <div class="col-md-6">
+                <label for="Loss" class="form-label">Năm trước có lỗ hay không:</label>
+                <input type="text" class="form-control" name="Loss" id="Loss" placeholder="Nhập Loss" required>
+            </div>
+            <div class="col-md-6">
+                <label for="History" class="form-label">Mức lỗ trong vòng 10 năm qua:</label>
+                <input type="text" class="form-control" name="History" id="History" placeholder="Nhập History" required>
+            </div>
+            <button type="submit">Dự đoán</button>
+        </form>
+
+        <div id="prediction-result" class="mt-4 text-center fw-bold text-black"></div>
+    </div>
+    <script>
+        // Xử lý form tải tệp CSV
+        $(function () {
+            $('#file-upload-form').on('submit', function (event) {
+                event.preventDefault();
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '/',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.predictions) {
+                            let resultTable = '<table border="1"><tr><th>Doanh Nghiệp</th><th>Kết Quả</th></tr>';
+                            response.predictions.forEach(row => {
+                                resultTable += `<tr><td>${row.Doanh_Nghiep}</td><td>${row.Prediction}</td></tr>`;
+                            });
+                            resultTable += '</table>';
+                            $('#prediction-result').html(resultTable);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#prediction-result').text('Đã xảy ra lỗi: ' + error);
+                    }
+                });
+            });
+        });
+
+        // Xử lý form nhập dữ liệu thủ công
+        $(function () {
+            $('#manual-input-form').on('submit', function (event) {
+                event.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '/',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.prediction) {
+                            $('#prediction-result').html(`<h2>Dự đoán: ${response.prediction}</h2>`);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#prediction-result').text('Đã xảy ra lỗi: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
